@@ -1,0 +1,29 @@
+spring:
+  application:
+    # 服务名称
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        # nacos注册地址
+        server-addr: 47.102.36.32:8848
+    gateway:
+      discovery:
+        locator:
+          # 让gateway通过服务发现组件找到其他的微服务
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: consumer_route
+          uri: lb://consumer
+          order: 0
+          predicates:
+            - Path=/c/**
+          filters:
+            - StripPrefix=1
+            - AddResponseHeader=X-Response-Default-Foo, Default-Bar
+  main:
+    allow-bean-definition-overriding: true
+server:
+  port: 7000
+
